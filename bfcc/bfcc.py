@@ -12,6 +12,7 @@ def parse_args():
         dest="output", metavar="output",
         help="output file (default: a.out)")
     
+    parser.add_argument('-A', action='store_true', help='dump ast')
     parser.add_argument('-S', action='store_true', help='output assembly')
 
     parser.set_defaults(output="a.out")
@@ -125,6 +126,10 @@ if __name__ == "__main__":
     parser = c_parser.CParser()
     ast = parser.parse(code, filename=args.input)
     
+    if args.A:
+        ast.show()
+        exit()
+
     parser = lark.Lark(grammar, parser='lalr', transformer=Transformer())
     lines = parser.parse(str(ast)).splitlines()
     gen = '\n'.join(f'    {line}' for line in lines)
